@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import ru.geekbrains.stargame.Background;
 import ru.geekbrains.stargame.engine.ActionListener;
@@ -30,7 +31,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
 
-    private Star star;
+    private Array<Star> stars = new Array<Star>();
 
     public MenuScreen(Game game) {
         super(game);
@@ -47,7 +48,9 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
         buttonExit.setHeightProportion(BUTTON_HEIGHT);
         buttonPlay = new ButtonPlay(atlas, BUTTON_PRESS_SCALE, this);
         buttonPlay.setHeightProportion(BUTTON_HEIGHT);
-        star = new Star(atlas, Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.5f, -0.1f), 0.01f);
+        for(int i = 0; i < 100; ++i){
+            stars.add( new Star(atlas, Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.5f, -0.1f), 0.01f));
+        }
     }
 
     @Override
@@ -58,7 +61,9 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     }
 
     public void update(float delta) {
-        star.update(delta);
+        for(Star star: stars){
+            star.update(delta);
+        }
     }
 
     public void draw() {
@@ -66,7 +71,9 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        star.draw(batch);
+        for(Star star: stars){
+            star.draw(batch);
+        }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
         batch.end();
@@ -76,7 +83,9 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     protected void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        star.resize(worldBounds);
+        for(Star star: stars){
+            star.resize(worldBounds);
+        }
         buttonExit.resize(worldBounds);
         buttonPlay.resize(worldBounds);
     }
