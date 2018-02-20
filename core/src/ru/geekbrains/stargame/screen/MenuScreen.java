@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 import ru.geekbrains.stargame.Background;
 import ru.geekbrains.stargame.engine.ActionListener;
@@ -20,6 +19,9 @@ import ru.geekbrains.stargame.ui.ButtonPlay;
 
 public class MenuScreen extends Base2DScreen implements ActionListener {
 
+    private static final int STAR_COUNT = 256;
+    private static final float STAR_HEIGHT = 0.01f;
+
     private static final float BUTTON_HEIGHT = 0.15f;
     private static final float BUTTON_PRESS_SCALE = 0.9f;
 
@@ -31,7 +33,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
 
-    private Array<Star> stars = new Array<Star>();
+    private Star star[];
 
     public MenuScreen(Game game) {
         super(game);
@@ -40,16 +42,17 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     @Override
     public void show() {
         super.show();
-        backgroundTexture = new Texture("bg.png");
+        backgroundTexture = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(backgroundTexture));
 
-        atlas = new TextureAtlas("menuAtlas.tpack");
+        atlas = new TextureAtlas("textures/menuAtlas.tpack");
         buttonExit = new ButtonExit(atlas, BUTTON_PRESS_SCALE, this);
         buttonExit.setHeightProportion(BUTTON_HEIGHT);
         buttonPlay = new ButtonPlay(atlas, BUTTON_PRESS_SCALE, this);
         buttonPlay.setHeightProportion(BUTTON_HEIGHT);
-        for(int i = 0; i < 100; ++i){
-            stars.add( new Star(atlas, Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.5f, -0.1f), 0.01f));
+        star = new Star[STAR_COUNT];
+        for (int i = 0; i < star.length; i++) {
+            star[i] = new Star(atlas, Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.5f, -0.1f), STAR_HEIGHT);
         }
     }
 
@@ -61,8 +64,8 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     }
 
     public void update(float delta) {
-        for(Star star: stars){
-            star.update(delta);
+        for (int i = 0; i < star.length; i++) {
+            star[i].update(delta);
         }
     }
 
@@ -71,8 +74,8 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        for(Star star: stars){
-            star.draw(batch);
+        for (int i = 0; i < star.length; i++) {
+            star[i].draw(batch);
         }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
@@ -83,8 +86,8 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     protected void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        for(Star star: stars){
-            star.resize(worldBounds);
+        for (int i = 0; i < star.length; i++) {
+            star[i].resize(worldBounds);
         }
         buttonExit.resize(worldBounds);
         buttonPlay.resize(worldBounds);
